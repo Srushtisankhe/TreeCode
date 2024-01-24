@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="new.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>Tree</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="menu">
+        <ul id="myUL">
+            <li><span class="caret">NodeType</span>
+              <ul class="nested">
+                <li>Selectone</li>
+                <li>Selecttwo</li>
+                <li><span class="caret">Tea</span>
+                  <ul class="nested">
+                    <li>Selectthree</li>
+                    <li>Selectfour</li>
+                      </ul>
+                      </li>
+              </ul>
+            </li>
+        </ul>
+        <button class="button" onclick="
+    Metro.getPlugin('#tv_1','treeview').addTo(null, {
+        caption: 'New node',
+        icon: '<span class=\'mif-air\'></span>'
+    })
+">Add node</button>
+
+<button class="button" onclick="
+    Metro.getPlugin('#tv_1','treeview').addTo($('#tv_1').find('.current'), {
+        caption: 'New node'
+    })
+">Add subnode</button>
+
+<button class="button" onclick="
+    Metro.getPlugin('#tv_1','treeview').addTo($('#tv_1').find('.current'), {
+        html: '<input data-role=checkbox data-caption=Checkbox>'
+    })
+">Add checkbox</button>
+
+<button class="button" onclick="
+    Metro.getPlugin('#tv_1','treeview').insertBefore($('#tv_1').find('.current'), {
+        caption: 'Before node'
+    })
+">Insert before</button>
+
+<button class="button" onclick="
+    Metro.getPlugin('#tv_1','treeview').insertAfter($('#tv_1').find('.current'), {
+        caption: 'After node'
+    })
+">Insert after</button>
+
+<button class="button" onclick="
+    Metro.getPlugin('#tv_1','treeview').del($('#tv_1').find('.current'))
+">Delete</button>
+
+<button class="button" onclick="
+    Metro.getPlugin('#tv_1','treeview').clean($('#tv_1').find('.current'))
+">Clear</button>
+
+<hr>
+
+<ul data-role="treeview" id="tv_1"></ul>
+      </div>
+  </nav>
+  <div id="tree-container">
+    <!-- Tree structure will be dynamically generated here -->
+</div>
+
+<script>
+    // Sample hierarchical data
+    const treeData = [
+        {
+            id: 1,
+            label: "Node 1",
+            children: [
+                {
+                    id: 2,
+                    label: "Node 1.1",
+                    children: [
+                        {
+                            id: 4,
+                            label: "Node 1.1.1",
+                            children: []
+                        },
+                        {
+                            id: 5,
+                            label: "Node 1.1.2",
+                            children: []
+                        }
+                    ]
+                },
+                {
+                    id: 3,
+                    label: "Node 1.2",
+                    children: []
+                }
+            ]
+        }
+    ];
+
+    // Function to generate the tree structure
+    function generateTree(parentElement, nodes) {
+        const ul = document.createElement('ul');
+        nodes.forEach(node => {
+            const li = document.createElement('li');
+            li.classList.add('tree-node');
+
+            const span = document.createElement('span');
+            span.innerHTML = `<span class="expand-collapse">[+]</span> ${node.label}`;
+            span.addEventListener('click', () => toggleNode(node, li));
+
+            li.appendChild(span);
+
+            if (node.children.length > 0) {
+                generateTree(li, node.children);
+            }
+
+            ul.appendChild(li);
+        });
+        parentElement.appendChild(ul);
+    }
+
+    // Function to toggle node expansion/collapse
+    function toggleNode(node, element) {
+        if (node.children.length > 0) {
+            const ul = element.querySelector('ul');
+            if (ul) {
+                ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
+                const expandCollapse = element.querySelector('.expand-collapse');
+                expandCollapse.innerHTML = `[${ul.style.display === 'none' ? '+' : '-'}] ${node.label}`;
+            }
+        }
+    }
+
+    // Initial tree generation
+    const treeContainer = document.getElementById('tree-container');
+    generateTree(treeContainer, treeData);
+</script>
+
+
+  </header>
+</body>
+</html>
